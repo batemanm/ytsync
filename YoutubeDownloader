@@ -1,0 +1,25 @@
+#!/usr/bin/python
+import os
+
+DIR = "./"
+NUM_KEEP = 5
+YOUTUBEDL = "/usr/bin/youtube-dl"
+
+channelList = []
+
+channelList.append ([REPLACE_WITH_DIR_NAME, REPLACE_WITH_YOUTUBE_PLAYLIST_URL])
+
+for i in channelList:
+  try:
+    os.mkdir (DIR + i[0])
+  except:
+    pass
+  os.system (YOUTUBEDL + " --format 18 --include-ads --playlist-end " + str(NUM_KEEP) + " --output \"" + DIR + i[0] + "/%(title)s.%(ext)s\" " + i[1])
+  search_dir = DIR + i[0]
+  os.chdir(search_dir)
+  files = filter(os.path.isfile, os.listdir(search_dir))
+  files = [os.path.join(search_dir, f) for f in files]
+  files.sort(key=lambda x: os.path.getmtime(x))
+  if (len(files) > NUM_KEEP):
+    for i in range (0,len(files)-NUM_KEEP):
+      os.remove (files[i])
